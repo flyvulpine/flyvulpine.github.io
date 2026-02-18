@@ -1,5 +1,43 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Wed, 18 Feb 2026 14:26:16 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>Blog更新日志</title><link>https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</link><description>## Update log
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Wed, 18 Feb 2026 14:31:36 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; 这是一个markdown语法的测试页面，也是我个人的记录库
+&gt; 
+&gt; ## 标题
+&gt; # H1
+&gt; ## H2
+&gt; ### H3
+&gt; #### H4
+&gt; 
+&gt; ## 强调
+&gt; 今天的天气真好啊，可以吃**冰激凌**吗？
+&gt; 
+&gt; ## 删除横线
+&gt; 今天的天气真好啊，可以吃~冰激凌~吗？
+&gt; 
+&gt; ## 列表
+&gt; 1. 看电视
+&gt; 2. 吃饭
+&gt; 3. 睡觉
+&gt;  
+&gt; - 乒乓球
+&gt; - 篮球
+&gt; - 羽毛球
+&gt; 
+&gt; ## 链接
+&gt; [我的博客](https://flyvulpine.github.io)
+&gt; [我的博客](https://flyvulpine.github.io)
+&gt; 
+&gt; ## 图像
+&gt; 这是我的头像：
+&gt; &lt;img width='420' height='420' alt='Image' src='https://github.com/user-attachments/assets/7cfea9a3-a0c8-4e3b-a0aa-9c411138e812' /&gt;
+&gt; 
+&gt; ## 水平线
+&gt; ---
+&gt; 我在2个水平线中间
+&gt; ***
+&gt; 我在2个水平线中间
+&gt; 
+&gt; ## 引用
+&gt; &gt; 落霞与孤鹜齐飞，秋水共长天一色。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</guid><pubDate>Wed, 18 Feb 2026 14:31:11 +0000</pubDate></item><item><title>Blog更新日志</title><link>https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</link><description>## Update log
 
 &gt; &gt; [!TIP]
 &gt; &gt; if you find new bugs or have new ideas,you can express your ideas through issues on GitHub.
