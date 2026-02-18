@@ -2,5 +2,12 @@
     "title":"flyvulpine",
     "subTitle":"欢迎来到胡恒瑞的博客",
     "avatarUrl":"https://avatars.githubusercontent.com/u/261764710?v=4&size=64",
-    "GMEEK_VERSION":"last"
+    "GMEEK_VERSION":"last",
+    "singlePage":["about"],
+    "email":"815169184@qq.com",
+    "allHead":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>",
+    "startSite":"02/17/2026",
+    "onePageListNum":15,
+    "bottomText":"欢迎交流学习",
+    "yearColorList":["#bc4c00", "#0969da", "#1f883d", "#A333D0"]
 }
