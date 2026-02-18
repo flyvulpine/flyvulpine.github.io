@@ -93,7 +93,7 @@
 <meta property="og:url" content="https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/261764710?v=4&size=64">
 <title>markdown语法调试</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -204,17 +204,22 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <ul>
 <li>this text is highlighted in red</li>
 </ul>
-<div class="highlight highlight-source-diff"><pre class="notranslate"><span class="pl-mi1"><span class="pl-mi1">+</span> this text is highlighted in green</span>
-<span class="pl-md"><span class="pl-md">-</span> this text is highlighted in red</span></pre></div>
+<pre lang="diff" class="notranslate"><code class="notranslate">+ this text is highlighted in green
+- this text is highlighted in red
+</code></pre>
 <h2>字体颜色</h2>
 <p>Some text in green! 123</p>
-<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">Some</span> <span class="pl-ent">text</span> <span class="pl-ent">in</span> <span class="pl-ent">green</span>! 123</pre></div>
+<pre lang="CSS" class="notranslate"><code class="notranslate">Some text in green! 123
+</code></pre>
 <p>Some text in blue! 123<br>
 Some text in blue with additional keyword highlighting! 123</p>
-<div class="highlight highlight-source-p4"><pre class="notranslate"><span class="pl-c1">Some</span> <span class="pl-c1">text</span> <span class="pl-c1">in</span> <span class="pl-c1">blue</span>! <span class="pl-c1">123</span></pre></div>
-<div class="highlight highlight-source-mint"><pre class="notranslate"><span class="pl-en">Some</span> <span class="pl-c1">text</span> <span class="pl-c1">in</span> <span class="pl-c1">blue</span> <span class="pl-k">with</span> <span class="pl-c1">additional</span> <span class="pl-c1">keyword</span> <span class="pl-c1">highlighting</span>! <span class="pl-c1">123</span></pre></div>
+<pre lang="P4" class="notranslate"><code class="notranslate">Some text in blue! 123
+</code></pre>
+<pre lang="Mint" class="notranslate"><code class="notranslate">Some text in blue with additional keyword highlighting! 123
+</code></pre>
 <p>Some text highlighted in red! 123</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-ii">Some text highlighted in red! 123</span></pre></div>
+<pre lang="JSON" class="notranslate"><code class="notranslate">Some text highlighted in red! 123
+</code></pre>
 <h2>标签</h2>
 <blockquote>
 <p>[!NOTE]<br>
