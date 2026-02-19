@@ -83,9 +83,9 @@ Some text highlighted in red! 123
 ## 更多语法
 **敬请期待**
 ## TOC目录
-
+1. 所有文章页添加TOC目录，只需要在config.json文件内添加配置
+ 
 ```
-<!-- ##{"script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>"}## -->
+"script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>",
 ```
-<!-- ##{"script":"<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script>"}## -->
 
