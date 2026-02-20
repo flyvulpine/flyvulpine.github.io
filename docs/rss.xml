@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Thu, 19 Feb 2026 05:16:40 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; [!NOTE]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Fri, 20 Feb 2026 00:45:26 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; [!NOTE]
 &gt; 这是一个markdown语法的测试页面，也是我个人的记录库，如果不会使用markdown语法，可以在此页面复制源码
 
 ## 标题
@@ -78,8 +78,12 @@
 &gt; if you find new bugs or have new ideas,you can express your ideas through issues on GitHub.
  
 2026.2.17 建立本站，并配置了config.json配置文件
+
 2026.2.18 建立更新日志，添加关于和邮箱，并调试markdown语法
-2026.2.19 增添插件TOC目录，修复已知BUG。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</guid><pubDate>Wed, 18 Feb 2026 13:43:14 +0000</pubDate></item><item><title>新春祝福</title><link>https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</link><description># 新春祝福词
+
+2026.2.19 增添插件TOC目录，修复已知BUG（网页无法访问？404）
+
+2026.2.20 markdown表格，HTML标签。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</guid><pubDate>Wed, 18 Feb 2026 13:43:14 +0000</pubDate></item><item><title>新春祝福</title><link>https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</link><description># 新春祝福词
 ## ——致所有访友    
 岁序常易，华章日新。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</guid><pubDate>Wed, 18 Feb 2026 00:43:16 +0000</pubDate></item><item><title>关于</title><link>https://flyvulpine.github.io/about.html</link><description>## 简介
 这里是胡恒瑞的博客
