@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Fri, 20 Feb 2026 01:24:29 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; [!NOTE]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Fri, 20 Feb 2026 01:29:30 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; [!NOTE]
 &gt; 这是一个markdown语法的测试页面，也是我个人的记录库，如果不会使用markdown语法，可以在此页面复制源码
 
 ## 标题
@@ -39,7 +39,22 @@
 今天的天气真好啊，可以吃~冰激凌~吗？
 
 ## 下划线
+```
 &lt;ins&gt;这是下划线文字&lt;/ins&gt;
+```
+&lt;ins&gt;这是下划线文字&lt;/ins&gt;
+
+## 上标
+```
+E=mc&lt;sup&gt;2&lt;/sup&gt;
+```
+E=mc&lt;sup&gt;2&lt;/sup&gt;
+
+## 下标
+```
+H&lt;sub&gt;2&lt;/sub&gt;O
+```
+H&lt;sub&gt;2&lt;/sub&gt;O
 
 ## 列表
 ```
