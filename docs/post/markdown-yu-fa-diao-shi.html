@@ -31,6 +31,18 @@
 ```
 今天的天气真好啊，可以吃**冰激凌**吗？
 
+## 斜体
+```
+*这是斜体文字*
+```
+*这是斜体文字*
+
+## 强调加斜体
+```
+***这是强调加斜体文字***
+```
+***这是强调加斜体文字***
+
 ## 删除横线
 ```
 今天的天气真好啊，可以吃~冰激凌~吗？
@@ -106,6 +118,18 @@
 ```
 今天的天气真好啊，可以吃**冰激凌**吗？
 
+## 斜体
+```
+*这是斜体文字*
+```
+*这是斜体文字*
+
+## 强调加斜体
+```
+***这是强调加斜体文字***
+```
+***这是强调加斜体文字***
+
 ## 删除横线
 ```
 今天的天气真好啊，可以吃~冰激凌~吗？
@@ -163,7 +187,7 @@
 <meta property="og:url" content="https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html">
 <meta property="og:image" content="https://avatars.githubusercontent.com/u/261764710?v=4&size=64">
 <title>markdown语法调试</title>
-<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
 
 
 </head>
@@ -245,6 +269,14 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <pre class="notranslate"><code class="notranslate">今天的天气真好啊，可以吃**冰激凌**吗？
 </code></pre>
 <p>今天的天气真好啊，可以吃<strong>冰激凌</strong>吗？</p>
+<h2>斜体</h2>
+<pre class="notranslate"><code class="notranslate">*这是斜体文字*
+</code></pre>
+<p><em>这是斜体文字</em></p>
+<h2>强调加斜体</h2>
+<pre class="notranslate"><code class="notranslate">***这是强调加斜体文字***
+</code></pre>
+<p><em><strong>这是强调加斜体文字</strong></em></p>
 <h2>删除横线</h2>
 <pre class="notranslate"><code class="notranslate">今天的天气真好啊，可以吃~冰激凌~吗？
 </code></pre>
@@ -293,26 +325,6 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 <blockquote>
 <p>落霞与孤鹜齐飞，秋水共长天一色。《滕王阁序》--王勃</p>
 </blockquote>
-<h2>对比</h2>
-<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>对比与字体颜色为Meekdai大佬源码</p>
-</div>
-<ul>
-<li>this text is highlighted in green</li>
-</ul>
-<ul>
-<li>this text is highlighted in red</li>
-</ul>
-<div class="highlight highlight-source-diff"><pre class="notranslate"><span class="pl-mi1"><span class="pl-mi1">+</span> this text is highlighted in green</span>
-<span class="pl-md"><span class="pl-md">-</span> this text is highlighted in red</span></pre></div>
-<h2>字体颜色</h2>
-<p>Some text in green! 123</p>
-<div class="highlight highlight-source-css"><pre class="notranslate"><span class="pl-ent">Some</span> <span class="pl-ent">text</span> <span class="pl-ent">in</span> <span class="pl-ent">green</span>! 123</pre></div>
-<p>Some text in blue! 123<br>
-Some text in blue with additional keyword highlighting! 123</p>
-<div class="highlight highlight-source-p4"><pre class="notranslate"><span class="pl-c1">Some</span> <span class="pl-c1">text</span> <span class="pl-c1">in</span> <span class="pl-c1">blue</span>! <span class="pl-c1">123</span></pre></div>
-<div class="highlight highlight-source-mint"><pre class="notranslate"><span class="pl-en">Some</span> <span class="pl-c1">text</span> <span class="pl-c1">in</span> <span class="pl-c1">blue</span> <span class="pl-k">with</span> <span class="pl-c1">additional</span> <span class="pl-c1">keyword</span> <span class="pl-c1">highlighting</span>! <span class="pl-c1">123</span></pre></div>
-<p>Some text highlighted in red! 123</p>
-<div class="highlight highlight-source-json"><pre class="notranslate"><span class="pl-ii">Some text highlighted in red! 123</span></pre></div>
 <h2>标签</h2>
 <pre class="notranslate"><code class="notranslate">&gt; [!NOTE]
 &gt; This is my Blog.
@@ -339,12 +351,49 @@ Some text in blue with additional keyword highlighting! 123</p>
 </div>
 <div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p><p>Don't drink and drive,Don't drink or drive.</p>
 </div>
-<h2>更多语法</h2>
-<p><strong>敬请期待</strong></p>
+<h2>表格</h2>
+<pre class="notranslate"><code class="notranslate">| Table Heading 1 | Table Heading 2 | Center align    | Right align     | Table Heading 5 |
+| :-------------- | :-------------- | :-------------: | --------------: | :-------------- |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+</code></pre>
+<markdown-accessiblity-table><table role="table">
+<thead>
+<tr>
+<th align="left">Table Heading 1</th>
+<th align="left">Table Heading 2</th>
+<th align="center">Center align</th>
+<th align="right">Right align</th>
+<th align="left">Table Heading 5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left">Item 1</td>
+<td align="left">Item 2</td>
+<td align="center">Item 3</td>
+<td align="right">Item 4</td>
+<td align="left">Item 5</td>
+</tr>
+<tr>
+<td align="left">Item 1</td>
+<td align="left">Item 2</td>
+<td align="center">Item 3</td>
+<td align="right">Item 4</td>
+<td align="left">Item 5</td>
+</tr>
+<tr>
+<td align="left">Item 1</td>
+<td align="left">Item 2</td>
+<td align="center">Item 3</td>
+<td align="right">Item 4</td>
+<td align="left">Item 5</td>
+</tr>
+</tbody>
+</table></markdown-accessiblity-table>
 <h2>TOC目录</h2>
-<ol>
-<li>所有文章页添加TOC目录，只需要在config.json文件内添加配置</li>
-</ol>
+<p>所有文章页添加TOC目录，只需要在config.json文件内添加配置</p>
 <pre class="notranslate"><code class="notranslate">"script":"&lt;script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'&gt;&lt;/script&gt;",
 </code></pre></div>
 <div style="font-size:small;margin-top:8px;float:right;">❤️ 欢迎交流学习 ❤️</div>
