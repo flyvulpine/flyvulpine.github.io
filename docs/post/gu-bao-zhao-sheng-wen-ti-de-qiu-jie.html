@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html data-color-mode="light" data-dark-theme="dark" data-light-theme="light" lang="zh-CN">
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="content-type" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link href='https://mirrors.sustech.edu.cn/cdnjs/ajax/libs/Primer/21.0.7/primer.css' rel='stylesheet' />
+    <script src='https://blog.meekdai.com/Gmeek/plugins/GmeekVercount.js'></script>
+    <link rel="icon" href="https://avatars.githubusercontent.com/u/261764710?v=4&size=64"><script>
+        let theme = localStorage.getItem("meek_theme") || "light";
+        document.documentElement.setAttribute("data-color-mode", theme);
+    </script>
+<meta name="description" content="# 问题描述
+从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
+### 几何抽象
+**已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.**
+
+<img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/a1749bc1-ed2f-4886-b193-2b72efdbc877' />
+
+### 常数设定
+设圆心(a,b)，半径r，P坐标(x<sub>1</sub>,y<sub>1</sub>)，Q坐标(x<sub>2</sub>,y<sub>2</sub>)，动点A坐标(x,y).
+**这里以 a = 2, b = -1, r = 3， x<sub>1</sub> = 5, y<sub>1</sub> = 1, x<sub>2</sub> = -2, y<sub>2</sub> = 4为例**.
+
+## 第一种暴力解法
+我们有一种很直接的想法，就是穷举圆上所有的点A，然后计算所有的PA+AQ，通过比较得到最小值.
+这里的计算显然是复杂的，我们可以交给计算机.
+
+### 暴力解法code示例
+```cpp
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // 常数
+    double a = 2, b = -1, r = 3;
+    double x1 = 5, y1 = 1, x2 = -2, y2 = 4;
+
+    double best_theta = 0;
+    double min_dist = 1e9;
+
+    // 暴力扫描：角度步长 0.0001 弧度
+    for (double theta = 0; theta < 2 * M_PI; theta += 0.0001) {
+        double x = a + r * cos(theta);
+        double y = b + r * sin(theta);
+
+        double d1 = sqrt(pow(x - x1, 2) + pow(y - y1, 2));
+        double d2 = sqrt(pow(x - x2, 2) + pow(y - y2, 2));
+        double total = d1 + d2;
+
+        if (total < min_dist) {
+            min_dist = total;
+            best_theta = theta;
+        }
+    }
+
+    double x_ans = a + r * cos(best_theta);
+    double y_ans = b + r * sin(best_theta);
+
+    cout << fixed << setprecision(6);
+    cout << '最短路径点: (' << x_ans << ', ' << y_ans << ')' << endl;
+    cout << '最短总距离: ' << min_dist << endl;
+
+    return 0;
+}
+```
+
+以上使用了圆的参数方程，遍历θ得到结果.
+利用c++我们很快就可以跑出结果（精度可以修改θ的步长).
+
+```
+最短路径点：（3.172664，1.761315）
+最短路径：7.615911
+```
+
+## 第二种解析方法
+我们想要用解析法尝试找到满足题目条件的A，应该满足怎样的约束条件？
+或者能否使用尺规作图找出这个A点？
+
+### 由直线到圆
+这个问题如果在直线上，那么就是将军饮马问题，就是做对称，定点P的对称点P’，动点A‘，与另一个定点Q三点共线时，距离取得最小值.
+
+<img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/feb102ba-2af0-4b76-9503-389c96294dda' />
+
+### 解析法求A须满足的条件
+那么在一个圆中，我们怎样把这个问题转化再到直线上呢？
+很容易想到作**圆的切线**，在圆的切线上找一点B不同于A，延长PA交圆于C，如下图.
+
+<img width='571' height='458' alt='Image' src='https://github.com/user-attachments/assets/c2046eee-9266-4a5e-9475-92ed08daa29d' />
+
+> [!NOTE]
+> C点怎么取？这里PA与圆相离时不考虑，与圆相切时取切点，与圆相交于两个交点时，取第一个交点（显然，第二个交点的距离比第一个交点来得远).
+
+在这里我们将P关于切线作对称，利用将军饮马的思路求出，再切线上哪个点D，可以使得PD+DQ的距离最小.
+
+<img width='566' height='563' alt='Image' src='https://github.com/user-attachments/assets/cffc8a2f-1382-4eb3-a30f-a841b0432038' />
+
+由于我们有PC+CQ＞PB+BQ＞PD+DQ
+那么这里我们只需要找到一点A，让D与A重合即有:
+PC+CQ＞PB+BQ＞PA+AQ
+
+<img width='560' height='600' alt='Image' src='https://github.com/user-attachments/assets/4fedd92e-a3eb-4519-97f2-b0b919f25cb1' />
+
+> [!TIP]
+> 这个点A满足反射角等于入射角（在后面可以推出椭圆的光学性质）
+
+### 点A代数约束条件的求解
+上述的点A满足反射角等于入射角.
+这里可以作直线OA，取A上方直线的一个点E，以上条件可以描述为∠PAE=∠EAQ
+我们在这里利用向量的方法表示两个夹角.
+为了方便坐标表示，不妨使得AE=OA，这样使得 $\overrightarrow{OA}=\overrightarrow{AE}$.
+
+<img width='581' height='550' alt='Image' src='https://github.com/user-attachments/assets/b16a3738-8812-471d-bab4-166473648428' />
+
+cos∠PAE= $\frac{\overrightarrow{AP}·\overrightarrow{AE}}{|AP||AE|}$
+cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$
+由于∠PAE=∠EAQ，又有 $\overrightarrow{OA}=\overrightarrow{AE}$，所以有下式
+ $\frac{\overrightarrow{AP}·\overrightarrow{OA}}{|AP|}=\frac{\overrightarrow{AQ}·\overrightarrow{OA}}{|AQ|}$
+
+这里可以用向量数量积的坐标运算展开，得到第一个约束
+ $\frac{(x_1-x)(x-a)+(y_1-y)(y-b)}{\sqrt{(x-x_1)^2+(y-y_1)^2}}=\frac{(x_2-x)(x-a)+(y_2-y)(y-b)}{\sqrt{(x-x_2)^2+(y-y_2)^2}}$
+又有A在圆上，所以有
+ $(x-a)^2+(y-b)^2=r^2$
+
+由上述得到的两个约束，x，y满足一个四次有理方程，可以通过差分或牛顿迭代法等求得数值解.
+
+### 求A最终的数值解
+解上述的四次方程，可以得到四个解（含复数解）t<sub>1</sub>,t<sub>2</sub>,t<sub>3</sub>,t<sub>4</sub>
+这里由于平方操作会产生增根，所以需要带回去检验消除增根.
+检验之后剩下的根也不一定是唯一的，因为直线是有可能与圆产生两个交点的，因此需要进一步检验.
+
+由上述可知，想要算出A的数值解计算量庞大（这也映证了使用尺规作图寻找点A的难度之大，当然这已经有数学家给出了完整的证明）
+
+### 解析法+牛顿迭代法求A数值解code示例
+
+- 由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化
+> [!NOTE]
+> 如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。">
+<meta property="og:title" content="古堡朝圣问题的求解">
+<meta property="og:description" content="# 问题描述
+从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
+### 几何抽象
+**已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.**
+
+<img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/a1749bc1-ed2f-4886-b193-2b72efdbc877' />
+
+### 常数设定
+设圆心(a,b)，半径r，P坐标(x<sub>1</sub>,y<sub>1</sub>)，Q坐标(x<sub>2</sub>,y<sub>2</sub>)，动点A坐标(x,y).
+**这里以 a = 2, b = -1, r = 3， x<sub>1</sub> = 5, y<sub>1</sub> = 1, x<sub>2</sub> = -2, y<sub>2</sub> = 4为例**.
+
+## 第一种暴力解法
+我们有一种很直接的想法，就是穷举圆上所有的点A，然后计算所有的PA+AQ，通过比较得到最小值.
+这里的计算显然是复杂的，我们可以交给计算机.
+
+### 暴力解法code示例
+```cpp
+#include <iostream>
+#include <cmath>
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // 常数
+    double a = 2, b = -1, r = 3;
+    double x1 = 5, y1 = 1, x2 = -2, y2 = 4;
+
+    double best_theta = 0;
+    double min_dist = 1e9;
+
+    // 暴力扫描：角度步长 0.0001 弧度
+    for (double theta = 0; theta < 2 * M_PI; theta += 0.0001) {
+        double x = a + r * cos(theta);
+        double y = b + r * sin(theta);
+
+        double d1 = sqrt(pow(x - x1, 2) + pow(y - y1, 2));
+        double d2 = sqrt(pow(x - x2, 2) + pow(y - y2, 2));
+        double total = d1 + d2;
+
+        if (total < min_dist) {
+            min_dist = total;
+            best_theta = theta;
+        }
+    }
+
+    double x_ans = a + r * cos(best_theta);
+    double y_ans = b + r * sin(best_theta);
+
+    cout << fixed << setprecision(6);
+    cout << '最短路径点: (' << x_ans << ', ' << y_ans << ')' << endl;
+    cout << '最短总距离: ' << min_dist << endl;
+
+    return 0;
+}
+```
+
+以上使用了圆的参数方程，遍历θ得到结果.
+利用c++我们很快就可以跑出结果（精度可以修改θ的步长).
+
+```
+最短路径点：（3.172664，1.761315）
+最短路径：7.615911
+```
+
+## 第二种解析方法
+我们想要用解析法尝试找到满足题目条件的A，应该满足怎样的约束条件？
+或者能否使用尺规作图找出这个A点？
+
+### 由直线到圆
+这个问题如果在直线上，那么就是将军饮马问题，就是做对称，定点P的对称点P’，动点A‘，与另一个定点Q三点共线时，距离取得最小值.
+
+<img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/feb102ba-2af0-4b76-9503-389c96294dda' />
+
+### 解析法求A须满足的条件
+那么在一个圆中，我们怎样把这个问题转化再到直线上呢？
+很容易想到作**圆的切线**，在圆的切线上找一点B不同于A，延长PA交圆于C，如下图.
+
+<img width='571' height='458' alt='Image' src='https://github.com/user-attachments/assets/c2046eee-9266-4a5e-9475-92ed08daa29d' />
+
+> [!NOTE]
+> C点怎么取？这里PA与圆相离时不考虑，与圆相切时取切点，与圆相交于两个交点时，取第一个交点（显然，第二个交点的距离比第一个交点来得远).
+
+在这里我们将P关于切线作对称，利用将军饮马的思路求出，再切线上哪个点D，可以使得PD+DQ的距离最小.
+
+<img width='566' height='563' alt='Image' src='https://github.com/user-attachments/assets/cffc8a2f-1382-4eb3-a30f-a841b0432038' />
+
+由于我们有PC+CQ＞PB+BQ＞PD+DQ
+那么这里我们只需要找到一点A，让D与A重合即有:
+PC+CQ＞PB+BQ＞PA+AQ
+
+<img width='560' height='600' alt='Image' src='https://github.com/user-attachments/assets/4fedd92e-a3eb-4519-97f2-b0b919f25cb1' />
+
+> [!TIP]
+> 这个点A满足反射角等于入射角（在后面可以推出椭圆的光学性质）
+
+### 点A代数约束条件的求解
+上述的点A满足反射角等于入射角.
+这里可以作直线OA，取A上方直线的一个点E，以上条件可以描述为∠PAE=∠EAQ
+我们在这里利用向量的方法表示两个夹角.
+为了方便坐标表示，不妨使得AE=OA，这样使得 $\overrightarrow{OA}=\overrightarrow{AE}$.
+
+<img width='581' height='550' alt='Image' src='https://github.com/user-attachments/assets/b16a3738-8812-471d-bab4-166473648428' />
+
+cos∠PAE= $\frac{\overrightarrow{AP}·\overrightarrow{AE}}{|AP||AE|}$
+cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$
+由于∠PAE=∠EAQ，又有 $\overrightarrow{OA}=\overrightarrow{AE}$，所以有下式
+ $\frac{\overrightarrow{AP}·\overrightarrow{OA}}{|AP|}=\frac{\overrightarrow{AQ}·\overrightarrow{OA}}{|AQ|}$
+
+这里可以用向量数量积的坐标运算展开，得到第一个约束
+ $\frac{(x_1-x)(x-a)+(y_1-y)(y-b)}{\sqrt{(x-x_1)^2+(y-y_1)^2}}=\frac{(x_2-x)(x-a)+(y_2-y)(y-b)}{\sqrt{(x-x_2)^2+(y-y_2)^2}}$
+又有A在圆上，所以有
+ $(x-a)^2+(y-b)^2=r^2$
+
+由上述得到的两个约束，x，y满足一个四次有理方程，可以通过差分或牛顿迭代法等求得数值解.
+
+### 求A最终的数值解
+解上述的四次方程，可以得到四个解（含复数解）t<sub>1</sub>,t<sub>2</sub>,t<sub>3</sub>,t<sub>4</sub>
+这里由于平方操作会产生增根，所以需要带回去检验消除增根.
+检验之后剩下的根也不一定是唯一的，因为直线是有可能与圆产生两个交点的，因此需要进一步检验.
+
+由上述可知，想要算出A的数值解计算量庞大（这也映证了使用尺规作图寻找点A的难度之大，当然这已经有数学家给出了完整的证明）
+
+### 解析法+牛顿迭代法求A数值解code示例
+
+- 由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化
+> [!NOTE]
+> 如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html">
+<meta property="og:image" content="https://avatars.githubusercontent.com/u/261764710?v=4&size=64">
+<title>古堡朝圣问题的求解</title>
+<link href="//unpkg.com/@wooorm/starry-night@2.1.1/style/both.css" rel="stylesheet" />
+
+
+</head>
+<style>
+body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;padding: 45px;font-size: 16px;font-family: sans-serif;line-height: 1.25;}
+#header{display:flex;padding-bottom:8px;border-bottom: 1px solid var(--borderColor-muted, var(--color-border-muted));margin-bottom: 16px;}
+#footer {margin-top:64px; text-align: center;font-size: small;}
+
+</style>
+
+<style>
+.postTitle{margin: auto 0;font-size:40px;font-weight:bold;}
+.title-right{display:flex;margin:auto 0 0 auto;}
+.title-right .circle{padding: 14px 16px;margin-right:8px;}
+#postBody{border-bottom: 1px solid var(--color-border-default);padding-bottom:36px;}
+#postBody hr{height:2px;}
+#cmButton{height:48px;margin-top:48px;}
+#comments{margin-top:64px;}
+.g-emoji{font-size:24px;}
+@media (max-width: 600px) {
+    body {padding: 8px;}
+    .postTitle{font-size:24px;}
+}
+.copy-feedback {
+    display: none;
+    position: absolute;
+    top: 10px;
+    right: 50px;
+    color: var(--color-fg-on-emphasis);
+    background-color: var(--color-fg-muted);
+    border-radius: 3px;
+    padding: 5px 8px;
+    font-size: 12px;
+}
+</style>
+<style>.markdown-alert{padding:0.5rem 1rem;margin-bottom:1rem;border-left:.25em solid var(--borderColor-default,var(--color-border-default));}.markdown-alert .markdown-alert-title {display:flex;font-weight:var(--base-text-weight-medium,500);align-items:center;line-height:1;}.markdown-alert>:first-child {margin-top:0;}.markdown-alert>:last-child {margin-bottom:0;}</style><style>.markdown-alert.markdown-alert-note {border-left-color:var(--borderColor-accent-emphasis, var(--color-accent-emphasis));background-color:var(--color-accent-subtle);}.markdown-alert.markdown-alert-note .markdown-alert-title {color: var(--fgColor-accent,var(--color-accent-fg));}</style><style>.markdown-alert.markdown-alert-tip {border-left-color:var(--borderColor-success-emphasis, var(--color-success-emphasis));background-color:var(--color-success-subtle);}.markdown-alert.markdown-alert-tip .markdown-alert-title {color: var(--fgColor-success,var(--color-success-fg));}</style><style>.markdown-alert.markdown-alert-important {border-left-color:var(--borderColor-done-emphasis, var(--color-done-emphasis));background-color:var(--color-done-subtle);}.markdown-alert.markdown-alert-important .markdown-alert-title {color: var(--fgColor-done,var(--color-done-fg));}</style><style>.markdown-alert.markdown-alert-caution {border-left-color:var(--borderColor-danger-emphasis, var(--color-danger-emphasis));background-color:var(--color-danger-subtle);}.markdown-alert.markdown-alert-caution .markdown-alert-title {color: var(--fgColor-danger,var(--color-danger-fg));}</style>
+
+
+
+<body>
+    <div id="header">
+<h1 class="postTitle">古堡朝圣问题的求解</h1>
+<div class="title-right">
+    <a href="https://flyvulpine.github.io" id="buttonHome" class="btn btn-invisible circle" title="首页">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathHome" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+    <a href="https://github.com/flyvulpine/flyvulpine.github.io/issues/9" target="_blank" class="btn btn-invisible circle" title="Issue">
+        <svg class="octicon" width="16" height="16">
+            <path id="pathIssue" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+    
+
+    <a class="btn btn-invisible circle" onclick="modeSwitch();" title="切换主题">
+        <svg class="octicon" width="16" height="16" >
+            <path id="themeSwitch" fill-rule="evenodd"></path>
+        </svg>
+    </a>
+
+</div>
+</div>
+    <div id="content">
+<div class="markdown-body" id="postBody"><h1>问题描述</h1>
+<p>从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？</p>
+<h3>几何抽象</h3>
+<p><strong>已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.</strong></p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/a1749bc1-ed2f-4886-b193-2b72efdbc877"><img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/a1749bc1-ed2f-4886-b193-2b72efdbc877" style="max-width: 100%; height: auto; max-height: 500px;; aspect-ratio: 600 / 500; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>常数设定</h3>
+<p>设圆心(a,b)，半径r，P坐标(x<sub>1</sub>,y<sub>1</sub>)，Q坐标(x<sub>2</sub>,y<sub>2</sub>)，动点A坐标(x,y).<br>
+<strong>这里以 a = 2, b = -1, r = 3， x<sub>1</sub> = 5, y<sub>1</sub> = 1, x<sub>2</sub> = -2, y<sub>2</sub> = 4为例</strong>.</p>
+<h2>第一种暴力解法</h2>
+<p>我们有一种很直接的想法，就是穷举圆上所有的点A，然后计算所有的PA+AQ，通过比较得到最小值.<br>
+这里的计算显然是复杂的，我们可以交给计算机.</p>
+<h3>暴力解法code示例</h3>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cmath<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iomanip<span class="pl-pds">&gt;</span></span>
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    <span class="pl-c"><span class="pl-c">//</span> 常数</span>
+    <span class="pl-k">double</span> a = <span class="pl-c1">2</span>, b = -<span class="pl-c1">1</span>, r = <span class="pl-c1">3</span>;
+    <span class="pl-k">double</span> x1 = <span class="pl-c1">5</span>, y1 = <span class="pl-c1">1</span>, x2 = -<span class="pl-c1">2</span>, y2 = <span class="pl-c1">4</span>;
+
+    <span class="pl-k">double</span> best_theta = <span class="pl-c1">0</span>;
+    <span class="pl-k">double</span> min_dist = <span class="pl-c1">1e9</span>;
+
+    <span class="pl-c"><span class="pl-c">//</span> 暴力扫描：角度步长 0.0001 弧度</span>
+    <span class="pl-k">for</span> (<span class="pl-k">double</span> theta = <span class="pl-c1">0</span>; theta &lt; <span class="pl-c1">2</span> * <span class="pl-c1">M_PI</span>; theta += <span class="pl-c1">0.0001</span>) {
+        <span class="pl-k">double</span> x = a + r * <span class="pl-c1">cos</span>(theta);
+        <span class="pl-k">double</span> y = b + r * <span class="pl-c1">sin</span>(theta);
+
+        <span class="pl-k">double</span> d1 = <span class="pl-c1">sqrt</span>(<span class="pl-c1">pow</span>(x - x1, <span class="pl-c1">2</span>) + <span class="pl-c1">pow</span>(y - y1, <span class="pl-c1">2</span>));
+        <span class="pl-k">double</span> d2 = <span class="pl-c1">sqrt</span>(<span class="pl-c1">pow</span>(x - x2, <span class="pl-c1">2</span>) + <span class="pl-c1">pow</span>(y - y2, <span class="pl-c1">2</span>));
+        <span class="pl-k">double</span> total = d1 + d2;
+
+        <span class="pl-k">if</span> (total &lt; min_dist) {
+            min_dist = total;
+            best_theta = theta;
+        }
+    }
+
+    <span class="pl-k">double</span> x_ans = a + r * <span class="pl-c1">cos</span>(best_theta);
+    <span class="pl-k">double</span> y_ans = b + r * <span class="pl-c1">sin</span>(best_theta);
+
+    cout &lt;&lt; fixed &lt;&lt; <span class="pl-c1">setprecision</span>(<span class="pl-c1">6</span>);
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>最短路径点: (<span class="pl-pds">"</span></span> &lt;&lt; x_ans &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; y_ans &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-pds">"</span></span> &lt;&lt; endl;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>最短总距离: <span class="pl-pds">"</span></span> &lt;&lt; min_dist &lt;&lt; endl;
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<p>以上使用了圆的参数方程，遍历θ得到结果.<br>
+利用c++我们很快就可以跑出结果（精度可以修改θ的步长).</p>
+<pre class="notranslate"><code class="notranslate">最短路径点：（3.172664，1.761315）
+最短路径：7.615911
+</code></pre>
+<h2>第二种解析方法</h2>
+<p>我们想要用解析法尝试找到满足题目条件的A，应该满足怎样的约束条件？<br>
+或者能否使用尺规作图找出这个A点？</p>
+<h3>由直线到圆</h3>
+<p>这个问题如果在直线上，那么就是将军饮马问题，就是做对称，定点P的对称点P’，动点A‘，与另一个定点Q三点共线时，距离取得最小值.</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/feb102ba-2af0-4b76-9503-389c96294dda"><img width="600" height="500" alt="Image" src="https://github.com/user-attachments/assets/feb102ba-2af0-4b76-9503-389c96294dda" style="max-width: 100%; height: auto; max-height: 500px;; aspect-ratio: 600 / 500; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<h3>解析法求A须满足的条件</h3>
+<p>那么在一个圆中，我们怎样把这个问题转化再到直线上呢？<br>
+很容易想到作<strong>圆的切线</strong>，在圆的切线上找一点B不同于A，延长PA交圆于C，如下图.</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/c2046eee-9266-4a5e-9475-92ed08daa29d"><img width="571" height="458" alt="Image" src="https://github.com/user-attachments/assets/c2046eee-9266-4a5e-9475-92ed08daa29d" style="max-width: 100%; height: auto; max-height: 458px;; aspect-ratio: 571 / 458; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>C点怎么取？这里PA与圆相离时不考虑，与圆相切时取切点，与圆相交于两个交点时，取第一个交点（显然，第二个交点的距离比第一个交点来得远).</p>
+</div>
+<p>在这里我们将P关于切线作对称，利用将军饮马的思路求出，再切线上哪个点D，可以使得PD+DQ的距离最小.</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/cffc8a2f-1382-4eb3-a30f-a841b0432038"><img width="566" height="563" alt="Image" src="https://github.com/user-attachments/assets/cffc8a2f-1382-4eb3-a30f-a841b0432038" style="max-width: 100%; height: auto; max-height: 563px;; aspect-ratio: 566 / 563; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>由于我们有PC+CQ＞PB+BQ＞PD+DQ<br>
+那么这里我们只需要找到一点A，让D与A重合即有:<br>
+PC+CQ＞PB+BQ＞PA+AQ</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/4fedd92e-a3eb-4519-97f2-b0b919f25cb1"><img width="560" height="600" alt="Image" src="https://github.com/user-attachments/assets/4fedd92e-a3eb-4519-97f2-b0b919f25cb1" style="max-width: 100%; height: auto; max-height: 600px;; aspect-ratio: 560 / 600; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p>这个点A满足反射角等于入射角（在后面可以推出椭圆的光学性质）</p>
+</div>
+<h3>点A代数约束条件的求解</h3>
+<p>上述的点A满足反射角等于入射角.<br>
+这里可以作直线OA，取A上方直线的一个点E，以上条件可以描述为∠PAE=∠EAQ<br>
+我们在这里利用向量的方法表示两个夹角.<br>
+为了方便坐标表示，不妨使得AE=OA，这样使得 $\overrightarrow{OA}=\overrightarrow{AE}$.</p>
+<p><a target="_blank" rel="noopener noreferrer" href="https://github.com/user-attachments/assets/b16a3738-8812-471d-bab4-166473648428"><img width="581" height="550" alt="Image" src="https://github.com/user-attachments/assets/b16a3738-8812-471d-bab4-166473648428" style="max-width: 100%; height: auto; max-height: 550px;; aspect-ratio: 581 / 550; background-color: var(--bgColor-muted); border-radius: 6px" class="js-gh-image-fallback"></a></p>
+<p>cos∠PAE= $\frac{\overrightarrow{AP}·\overrightarrow{AE}}{|AP||AE|}$<br>
+cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$<br>
+由于∠PAE=∠EAQ，又有 $\overrightarrow{OA}=\overrightarrow{AE}$，所以有下式<br>
+$\frac{\overrightarrow{AP}·\overrightarrow{OA}}{|AP|}=\frac{\overrightarrow{AQ}·\overrightarrow{OA}}{|AQ|}$</p>
+<p>这里可以用向量数量积的坐标运算展开，得到第一个约束<br>
+$\frac{(x_1-x)(x-a)+(y_1-y)(y-b)}{\sqrt{(x-x_1)^2+(y-y_1)^2}}=\frac{(x_2-x)(x-a)+(y_2-y)(y-b)}{\sqrt{(x-x_2)^2+(y-y_2)^2}}$<br>
+又有A在圆上，所以有<br>
+$(x-a)^2+(y-b)^2=r^2$</p>
+<p>由上述得到的两个约束，x，y满足一个四次有理方程，可以通过差分或牛顿迭代法等求得数值解.</p>
+<h3>求A最终的数值解</h3>
+<p>解上述的四次方程，可以得到四个解（含复数解）t<sub>1</sub>,t<sub>2</sub>,t<sub>3</sub>,t<sub>4</sub><br>
+这里由于平方操作会产生增根，所以需要带回去检验消除增根.<br>
+检验之后剩下的根也不一定是唯一的，因为直线是有可能与圆产生两个交点的，因此需要进一步检验.</p>
+<p>由上述可知，想要算出A的数值解计算量庞大（这也映证了使用尺规作图寻找点A的难度之大，当然这已经有数学家给出了完整的证明）</p>
+<h3>解析法+牛顿迭代法求A数值解code示例</h3>
+<ul>
+<li>由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化</li>
+</ul>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。此时上述的第一个约束条件化为: $\frac{P'·A - r^2}{|P'-A|}=\frac{Q'·A - r^2}{|Q'-A|}$，其中点积 $P'·A=u_1u+v_1v$, $|P'-A|=\sqrt{(u-u_1)^2+(v-v_1)^2}$，接下来参数化，令A=(u,v)=r(cosθ,sinθ)，则: $P'·A = r(u_1cosθ+v_1sinθ)，|P'-A|^2 = |P'|^2+r^2-2P'·A$，记 $\alpha = u_1,\ \beta=v_1,\quad \gamma=u_2,\ \delta=v_2,\quad \rho=r.$此时第一个约束可以化为： $\frac{\rho(\alpha\cos\theta+\beta\sin\theta)-\rho^2}{\sqrt{\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)}}=\frac{\rho(\gamma\cos\theta+\delta\sin\theta)-\rho^2}{\sqrt{\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)}}.$接下来可以转化为四次方程，先两边平方（这里会产生增根，可能是外角平分线): $\left(\alpha\cos\theta+\beta\sin\theta-\rho\right)^2\left(\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)\right)=\left(\gamma\cos\theta+\delta\sin\theta-\rho\right)^2\left(\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)\right).$，利用万能公式化简，令 $t=\tan\frac{\theta}{2}$，则 $\cos\theta=\frac{1-t^2}{1+t^2},\quad \sin\theta=\frac{2t}{1+t^2}.$，代入之后，每一项都是关于 t 的有理函数。乘以公共分母 $(1+t^2)^2$（非零）后，得到关于 t 的多项式方程。因为 $\cos\theta,\sin\theta$ 中分母为 $1+t^2$，而平方后分母最高为 $(1+t^2)^2$，分子最高次数为 2，故整理后最高次数为 4。即总能写成： $\boxed{A_4 t^4 + A_3 t^3 + A_2 t^2 + A_1 t + A_0 =0,}$</p>
+</div>
+<ul>
+<li>按照上述的方式可以将第一个约束表达为线性一元方程，进而使用牛顿迭代法，当然这里的系数展开略显冗杂，展开即可，这里不多赘述.</li>
+</ul>
+<div class="highlight highlight-source-c++"><pre class="notranslate">#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iostream<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>cmath<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>vector<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>iomanip<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">using</span> <span class="pl-k">namespace</span> <span class="pl-en">std</span><span class="pl-k">;</span>
+
+<span class="pl-c"><span class="pl-c">//</span> 平移后的参数结构</span>
+<span class="pl-k">struct</span> <span class="pl-en">Params</span> {
+    <span class="pl-k">double</span> alpha, beta;
+    <span class="pl-k">double</span> gamma, delta;
+    <span class="pl-k">double</span> rho;
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 存储解的结构</span>
+<span class="pl-k">struct</span> <span class="pl-en">Solution</span> {
+    <span class="pl-k">double</span> dist;
+    <span class="pl-k">double</span> x;
+    <span class="pl-k">double</span> y;
+};
+
+<span class="pl-c"><span class="pl-c">//</span> 平方后的方程 F(t) = 0（对应推导出的四次方程）</span>
+<span class="pl-k">double</span> <span class="pl-en">F</span>(<span class="pl-k">double</span> t, <span class="pl-k">const</span> Params&amp; p) {
+    <span class="pl-k">double</span> t2 = t * t;
+    <span class="pl-k">double</span> one_t2 = <span class="pl-c1">1.0</span> + t2;
+
+    <span class="pl-k">double</span> <span class="pl-c1">P1</span> = p.<span class="pl-smi">alpha</span> * (<span class="pl-c1">1</span> - t2) + <span class="pl-c1">2</span> * p.<span class="pl-smi">beta</span> * t - p.<span class="pl-smi">rho</span> * one_t2;
+    <span class="pl-k">double</span> <span class="pl-c1">P2</span> = p.<span class="pl-smi">gamma</span> * (<span class="pl-c1">1</span> - t2) + <span class="pl-c1">2</span> * p.<span class="pl-smi">delta</span> * t - p.<span class="pl-smi">rho</span> * one_t2;
+
+    <span class="pl-k">double</span> <span class="pl-c1">S1</span> = p.<span class="pl-smi">alpha</span> * p.<span class="pl-smi">alpha</span> + p.<span class="pl-smi">beta</span> * p.<span class="pl-smi">beta</span> + p.<span class="pl-smi">rho</span> * p.<span class="pl-smi">rho</span>;
+    <span class="pl-k">double</span> <span class="pl-c1">S2</span> = p.<span class="pl-smi">gamma</span> * p.<span class="pl-smi">gamma</span> + p.<span class="pl-smi">delta</span> * p.<span class="pl-smi">delta</span> + p.<span class="pl-smi">rho</span> * p.<span class="pl-smi">rho</span>;
+
+    <span class="pl-k">double</span> <span class="pl-c1">Q1</span> = <span class="pl-c1">S2</span> * one_t2 - <span class="pl-c1">2</span> * p.<span class="pl-smi">rho</span> * (p.<span class="pl-smi">gamma</span> * (<span class="pl-c1">1</span> - t2) + <span class="pl-c1">2</span> * p.<span class="pl-smi">delta</span> * t);
+    <span class="pl-k">double</span> <span class="pl-c1">Q2</span> = <span class="pl-c1">S1</span> * one_t2 - <span class="pl-c1">2</span> * p.<span class="pl-smi">rho</span> * (p.<span class="pl-smi">alpha</span> * (<span class="pl-c1">1</span> - t2) + <span class="pl-c1">2</span> * p.<span class="pl-smi">beta</span> * t);
+
+    <span class="pl-k">return</span> (<span class="pl-c1">P1</span> * <span class="pl-c1">P1</span> * <span class="pl-c1">Q1</span>) - (<span class="pl-c1">P2</span> * <span class="pl-c1">P2</span> * <span class="pl-c1">Q2</span>);
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 数值微分（中心差分）</span>
+<span class="pl-k">double</span> <span class="pl-en">dF</span>(<span class="pl-k">double</span> t, <span class="pl-k">const</span> Params&amp; p) {
+    <span class="pl-k">double</span> h = <span class="pl-c1">1e-8</span>;
+    <span class="pl-k">return</span> (<span class="pl-c1">F</span>(t + h, p) - <span class="pl-c1">F</span>(t - h, p)) / (<span class="pl-c1">2.0</span> * h);
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 牛顿法求根（给定初始猜测）</span>
+<span class="pl-k">double</span> <span class="pl-en">newton</span>(<span class="pl-k">double</span> t0, <span class="pl-k">const</span> Params&amp; p) {
+    <span class="pl-k">double</span> t = t0;
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">100</span>; ++i) {
+        <span class="pl-k">double</span> f = <span class="pl-c1">F</span>(t, p);
+        <span class="pl-k">double</span> df = <span class="pl-c1">dF</span>(t, p);
+        <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(df) &lt; <span class="pl-c1">1e-15</span>) <span class="pl-k">break</span>;
+        <span class="pl-k">double</span> t_new = t - f / df;
+        <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(t_new - t) &lt; <span class="pl-c1">1e-10</span>) {
+            <span class="pl-k">return</span> t_new;
+        }
+        t = t_new;
+    }
+    <span class="pl-k">return</span> t;
+}
+
+<span class="pl-c"><span class="pl-c">//</span> 回代验证原方程（剔除平方增根）</span>
+<span class="pl-k">bool</span> <span class="pl-en">isTrueSolution</span>(<span class="pl-k">double</span> t, <span class="pl-k">const</span> Params&amp; p) {
+    <span class="pl-k">double</span> theta = <span class="pl-c1">2.0</span> * <span class="pl-c1">atan</span>(t);
+    <span class="pl-k">double</span> u = p.<span class="pl-smi">rho</span> * <span class="pl-c1">cos</span>(theta);
+    <span class="pl-k">double</span> v = p.<span class="pl-smi">rho</span> * <span class="pl-c1">sin</span>(theta);
+
+    <span class="pl-k">double</span> A_dot_P = p.<span class="pl-smi">alpha</span> * u + p.<span class="pl-smi">beta</span> * v;
+    <span class="pl-k">double</span> distA = <span class="pl-c1">sqrt</span>((u - p.<span class="pl-smi">alpha</span>) * (u - p.<span class="pl-smi">alpha</span>) + (v - p.<span class="pl-smi">beta</span>) * (v - p.<span class="pl-smi">beta</span>));
+    <span class="pl-k">if</span> (distA &lt; <span class="pl-c1">1e-12</span>) <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+
+    <span class="pl-k">double</span> B_dot_P = p.<span class="pl-smi">gamma</span> * u + p.<span class="pl-smi">delta</span> * v;
+    <span class="pl-k">double</span> distB = <span class="pl-c1">sqrt</span>((u - p.<span class="pl-smi">gamma</span>) * (u - p.<span class="pl-smi">gamma</span>) + (v - p.<span class="pl-smi">delta</span>) * (v - p.<span class="pl-smi">delta</span>));
+    <span class="pl-k">if</span> (distB &lt; <span class="pl-c1">1e-12</span>) <span class="pl-k">return</span> <span class="pl-c1">false</span>;
+
+    <span class="pl-k">double</span> lhs = (A_dot_P - p.<span class="pl-smi">rho</span> * p.<span class="pl-smi">rho</span>) / distA;
+    <span class="pl-k">double</span> rhs = (B_dot_P - p.<span class="pl-smi">rho</span> * p.<span class="pl-smi">rho</span>) / distB;
+
+    <span class="pl-k">return</span> <span class="pl-c1">fabs</span>(lhs - rhs) &lt; <span class="pl-c1">1e-6</span>;
+}
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>() {
+    <span class="pl-c"><span class="pl-c">//</span> 常变量 </span>
+    <span class="pl-k">double</span> a = <span class="pl-c1">2.0</span>, b = -<span class="pl-c1">1.0</span>, r = <span class="pl-c1">3.0</span>;
+    <span class="pl-k">double</span> x1 = <span class="pl-c1">5.0</span>, y1 = <span class="pl-c1">1.0</span>;
+    <span class="pl-k">double</span> x2 = -<span class="pl-c1">2.0</span>, y2 = <span class="pl-c1">4.0</span>;
+
+    <span class="pl-c"><span class="pl-c">//</span> 平移到圆心为原点</span>
+    Params p;
+    p.<span class="pl-smi">alpha</span> = x1 - a;
+    p.<span class="pl-smi">beta</span>  = y1 - b;
+    p.<span class="pl-smi">gamma</span> = x2 - a;
+    p.<span class="pl-smi">delta</span> = y2 - b;
+    p.<span class="pl-smi">rho</span>   = r;
+
+    cout &lt;&lt; fixed &lt;&lt; <span class="pl-c1">setprecision</span>(<span class="pl-c1">10</span>);
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>平移后参数：<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>A' = (<span class="pl-pds">"</span></span> &lt;&lt; p.<span class="pl-smi">alpha</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; p.<span class="pl-smi">beta</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>B' = (<span class="pl-pds">"</span></span> &lt;&lt; p.<span class="pl-smi">gamma</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; p.<span class="pl-smi">delta</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>半径 r = <span class="pl-pds">"</span></span> &lt;&lt; p.<span class="pl-smi">rho</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n\n</span><span class="pl-pds">"</span></span>;
+
+    <span class="pl-c"><span class="pl-c">//</span> 第一步：在 t 轴上扫描，找出 F(t)=0 的所有实根</span>
+    vector&lt;<span class="pl-k">double</span>&gt; roots;
+    <span class="pl-k">double</span> t_min = -<span class="pl-c1">100.0</span>, t_max = <span class="pl-c1">100.0</span>;
+    <span class="pl-k">double</span> step = <span class="pl-c1">0.1</span>;
+
+    <span class="pl-k">for</span> (<span class="pl-k">double</span> t0 = t_min; t0 &lt; t_max; t0 += step) {
+        <span class="pl-k">double</span> f1 = <span class="pl-c1">F</span>(t0, p);
+        <span class="pl-k">double</span> f2 = <span class="pl-c1">F</span>(t0 + step, p);
+        <span class="pl-k">if</span> (f1 * f2 &lt; <span class="pl-c1">0</span>) { <span class="pl-c"><span class="pl-c">//</span> 异号 =&gt; 区间内有根</span>
+            <span class="pl-k">double</span> mid = (t0 + t0 + step) / <span class="pl-c1">2.0</span>;
+            <span class="pl-k">double</span> root = <span class="pl-c1">newton</span>(mid, p);
+            <span class="pl-c"><span class="pl-c">//</span> 去除增根</span>
+            <span class="pl-k">bool</span> duplicate = <span class="pl-c1">false</span>;
+            <span class="pl-k">for</span> (<span class="pl-c1">size_t</span> i = <span class="pl-c1">0</span>; i &lt; roots.<span class="pl-c1">size</span>(); ++i) {
+                <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(roots[i] - root) &lt; <span class="pl-c1">1e-6</span>) {
+                    duplicate = <span class="pl-c1">true</span>;
+                    <span class="pl-k">break</span>;
+                }
+            }
+            <span class="pl-k">if</span> (!duplicate) roots.<span class="pl-c1">push_back</span>(root);
+        }
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 额外补充几个初始点（避免漏掉重根或孤立根）</span>
+    <span class="pl-k">double</span> extra[] = {-<span class="pl-c1">10</span>, -<span class="pl-c1">5</span>, -<span class="pl-c1">1</span>, <span class="pl-c1">0</span>, <span class="pl-c1">1</span>, <span class="pl-c1">5</span>, <span class="pl-c1">10</span>};
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> i = <span class="pl-c1">0</span>; i &lt; <span class="pl-c1">7</span>; ++i) {
+        <span class="pl-k">double</span> root = <span class="pl-c1">newton</span>(extra[i], p);
+        <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(root) &lt; <span class="pl-c1">1000</span>) {
+            <span class="pl-k">bool</span> duplicate = <span class="pl-c1">false</span>;
+            <span class="pl-k">for</span> (<span class="pl-c1">size_t</span> j = <span class="pl-c1">0</span>; j &lt; roots.<span class="pl-c1">size</span>(); ++j) {
+                <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(roots[j] - root) &lt; <span class="pl-c1">1e-6</span>) {
+                    duplicate = <span class="pl-c1">true</span>;
+                    <span class="pl-k">break</span>;
+                }
+            }
+            <span class="pl-k">if</span> (!duplicate) roots.<span class="pl-c1">push_back</span>(root);
+        }
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 第二步：筛选出满足原方程的真解，并计算总距离</span>
+    vector&lt;Solution&gt; solutions;
+
+    <span class="pl-k">for</span> (<span class="pl-c1">size_t</span> i = <span class="pl-c1">0</span>; i &lt; roots.<span class="pl-c1">size</span>(); ++i) {
+        <span class="pl-k">double</span> t = roots[i];
+        <span class="pl-k">if</span> (!<span class="pl-c1">isTrueSolution</span>(t, p)) <span class="pl-k">continue</span>;
+
+        <span class="pl-k">double</span> theta = <span class="pl-c1">2.0</span> * <span class="pl-c1">atan</span>(t);
+        <span class="pl-k">double</span> u = p.<span class="pl-smi">rho</span> * <span class="pl-c1">cos</span>(theta);
+        <span class="pl-k">double</span> v = p.<span class="pl-smi">rho</span> * <span class="pl-c1">sin</span>(theta);
+        <span class="pl-k">double</span> x = a + u;
+        <span class="pl-k">double</span> y = b + v;
+
+        <span class="pl-c"><span class="pl-c">//</span> 再校验一下是否在圆上</span>
+        <span class="pl-k">double</span> circle_err = (x - a) * (x - a) + (y - b) * (y - b) - r * r;
+        <span class="pl-k">if</span> (<span class="pl-c1">fabs</span>(circle_err) &gt; <span class="pl-c1">1e-5</span>) <span class="pl-k">continue</span>;
+
+        <span class="pl-c"><span class="pl-c">//</span> 计算总路程 PA + PB</span>
+        <span class="pl-k">double</span> d1 = <span class="pl-c1">sqrt</span>((x - x1) * (x - x1) + (y - y1) * (y - y1));
+        <span class="pl-k">double</span> d2 = <span class="pl-c1">sqrt</span>((x - x2) * (x - x2) + (y - y2) * (y - y2));
+        <span class="pl-k">double</span> total = d1 + d2;
+
+        Solution sol;
+        sol.<span class="pl-smi">dist</span> = total;
+        sol.<span class="pl-smi">x</span> = x;
+        sol.<span class="pl-smi">y</span> = y;
+        solutions.<span class="pl-c1">push_back</span>(sol);
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 输出结果</span>
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>满足反射条件的真解个数: <span class="pl-pds">"</span></span> &lt;&lt; solutions.<span class="pl-c1">size</span>() &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    <span class="pl-k">if</span> (solutions.<span class="pl-c1">empty</span>()) {
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>未找到任何满足反射条件的点。<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+        <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+    }
+
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span>所有真解及对应总路程：<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    <span class="pl-k">for</span> (<span class="pl-c1">size_t</span> i = <span class="pl-c1">0</span>; i &lt; solutions.<span class="pl-c1">size</span>(); ++i) {
+        cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>  (x, y) = (<span class="pl-pds">"</span></span> &lt;&lt; solutions[i].<span class="pl-smi">x</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; solutions[i].<span class="pl-smi">y</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)  总距离 = <span class="pl-pds">"</span></span> &lt;&lt; solutions[i].<span class="pl-smi">dist</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    }
+
+    <span class="pl-c"><span class="pl-c">//</span> 找出总距离最小的解（古堡朝圣最短路径）</span>
+    <span class="pl-k">int</span> bestIdx = <span class="pl-c1">0</span>;
+    <span class="pl-k">for</span> (<span class="pl-c1">size_t</span> i = <span class="pl-c1">1</span>; i &lt; solutions.<span class="pl-c1">size</span>(); ++i) {
+        <span class="pl-k">if</span> (solutions[i].<span class="pl-smi">dist</span> &lt; solutions[bestIdx].<span class="pl-smi">dist</span>) {
+            bestIdx = i;
+        }
+    }
+
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span>【古堡朝圣最短路径点】<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>  (x, y) = (<span class="pl-pds">"</span></span> &lt;&lt; solutions[bestIdx].<span class="pl-smi">x</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>, <span class="pl-pds">"</span></span> &lt;&lt; solutions[bestIdx].<span class="pl-smi">y</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>)<span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+    cout &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span>  最短总距离 = <span class="pl-pds">"</span></span> &lt;&lt; solutions[bestIdx].<span class="pl-smi">dist</span> &lt;&lt; <span class="pl-s"><span class="pl-pds">"</span><span class="pl-cce">\n</span><span class="pl-pds">"</span></span>;
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+<div class="markdown-alert markdown-alert-important"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-report mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v9.5A1.75 1.75 0 0 1 14.25 13H8.06l-2.573 2.573A1.458 1.458 0 0 1 3 14.543V13H1.75A1.75 1.75 0 0 1 0 11.25Zm1.75-.25a.25.25 0 0 0-.25.25v9.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h6.5a.25.25 0 0 0 .25-.25v-9.5a.25.25 0 0 0-.25-.25Zm7 2.25v2.5a.75.75 0 0 1-1.5 0v-2.5a.75.75 0 0 1 1.5 0ZM9 9a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"></path></svg>Important</p><p>简单解释一下牛顿迭代法：选择一个x作为初始迭代点，作切线与x轴交于一点，作为下一次的迭代点，迭代公式： $x_{n+1}=x_n-\frac{f(n)}{f'(n)}$，其中f'(n)≠0.</p>
+</div>
+<div class="markdown-alert markdown-alert-caution"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-stop mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Caution</p><p>特别注意：牛顿迭代法仅适用非齐次线性一元方程的求根.</p>
+</div>
+<h3>结果输出</h3>
+<p>运行后输出以下结果：</p>
+<pre class="notranslate"><code class="notranslate">平移后参数：
+A' = (3.0000000000, 2.0000000000)
+B' = (-4.0000000000, 5.0000000000)
+半径 r = 3.0000000000
+
+满足反射条件的真解个数: 2
+
+所有真解及对应总路程：
+  (x, y) = (1.8172946261, -3.9944312893)  总距离 = 14.7813715511
+  (x, y) = (3.1726850152, 1.7613058243)  总距离 = 7.6159105025
+
+【古堡朝圣最短路径点】
+  (x, y) = (3.1726850152, 1.7613058243)
+  最短总距离 = 7.6159105025
+</code></pre>
+<p>可以看到最终结果与上面的7.615911相同，只不过更加精确了.</p></div>
+<div style="font-size:small;margin-top:8px;float:right;">❤️ 欢迎交流学习 ❤️</div>
+
+<button class="btn btn-block" type="button" onclick="openComments()" id="cmButton">评论</button>
+<div class="comments" id="comments"></div>
+
+</div>
+    <div id="footer"><div id="footer1">Copyright © <span id="copyrightYear"></span> <a href="https://flyvulpine.github.io">flyvulpine</a></div>
+<div id="footer2">
+    <span id="runday"></span><span>Powered by <a href="https://meekdai.com/Gmeek.html" target="_blank">Gmeek</a></span>
+</div>
+
+<script>
+var now=new Date();
+document.getElementById("copyrightYear").innerHTML=now.getFullYear();
+
+if("02/17/2026"!=""){
+    var startSite=new Date("02/17/2026");
+    var diff=now.getTime()-startSite.getTime();
+    var diffDay=Math.floor(diff/(1000*60*60*24));
+    document.getElementById("runday").innerHTML="网站运行 "+diffDay+" 天"+" • ";
+}
+</script></div>
+</body>
+<script>
+var IconList={'sun': 'M8 10.5a2.5 2.5 0 100-5 2.5 2.5 0 000 5zM8 12a4 4 0 100-8 4 4 0 000 8zM8 0a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V.75A.75.75 0 018 0zm0 13a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 018 13zM2.343 2.343a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zm9.193 9.193a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zM16 8a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0116 8zM3 8a.75.75 0 01-.75.75H.75a.75.75 0 010-1.5h1.5A.75.75 0 013 8zm10.657-5.657a.75.75 0 010 1.061l-1.061 1.06a.75.75 0 11-1.06-1.06l1.06-1.06a.75.75 0 011.06 0zm-9.193 9.193a.75.75 0 010 1.06l-1.06 1.061a.75.75 0 11-1.061-1.06l1.06-1.061a.75.75 0 011.061 0z', 'moon': 'M9.598 1.591a.75.75 0 01.785-.175 7 7 0 11-8.967 8.967.75.75 0 01.961-.96 5.5 5.5 0 007.046-7.046.75.75 0 01.175-.786zm1.616 1.945a7 7 0 01-7.678 7.678 5.5 5.5 0 107.678-7.678z', 'sync': 'M1.705 8.005a.75.75 0 0 1 .834.656 5.5 5.5 0 0 0 9.592 2.97l-1.204-1.204a.25.25 0 0 1 .177-.427h3.646a.25.25 0 0 1 .25.25v3.646a.25.25 0 0 1-.427.177l-1.38-1.38A7.002 7.002 0 0 1 1.05 8.84a.75.75 0 0 1 .656-.834ZM8 2.5a5.487 5.487 0 0 0-4.131 1.869l1.204 1.204A.25.25 0 0 1 4.896 6H1.25A.25.25 0 0 1 1 5.75V2.104a.25.25 0 0 1 .427-.177l1.38 1.38A7.002 7.002 0 0 1 14.95 7.16a.75.75 0 0 1-1.49.178A5.5 5.5 0 0 0 8 2.5Z', 'home': 'M6.906.664a1.749 1.749 0 0 1 2.187 0l5.25 4.2c.415.332.657.835.657 1.367v7.019A1.75 1.75 0 0 1 13.25 15h-3.5a.75.75 0 0 1-.75-.75V9H7v5.25a.75.75 0 0 1-.75.75h-3.5A1.75 1.75 0 0 1 1 13.25V6.23c0-.531.242-1.034.657-1.366l5.25-4.2Zm1.25 1.171a.25.25 0 0 0-.312 0l-5.25 4.2a.25.25 0 0 0-.094.196v7.019c0 .138.112.25.25.25H5.5V8.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 .75.75v5.25h2.75a.25.25 0 0 0 .25-.25V6.23a.25.25 0 0 0-.094-.195Z', 'github': 'M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z', 'copy': 'M0 6.75C0 5.784.784 5 1.75 5h1.5a.75.75 0 0 1 0 1.5h-1.5a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-1.5a.75.75 0 0 1 1.5 0v1.5A1.75 1.75 0 0 1 9.25 16h-7.5A1.75 1.75 0 0 1 0 14.25Z M5 1.75C5 .784 5.784 0 6.75 0h7.5C15.216 0 16 .784 16 1.75v7.5A1.75 1.75 0 0 1 14.25 11h-7.5A1.75 1.75 0 0 1 5 9.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h7.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z', 'check': 'M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z'};
+var utterancesLoad=0;
+
+let themeSettings={
+    "dark": ["dark","moon","#00f0ff","dark-blue"],
+    "light": ["light","sun","#ff5000","github-light"],
+    "auto": ["auto","sync","","preferred-color-scheme"]
+};
+function changeTheme(mode, icon, color, utheme){
+    document.documentElement.setAttribute("data-color-mode",mode);
+    document.getElementById("themeSwitch").setAttribute("d",value=IconList[icon]);
+    document.getElementById("themeSwitch").parentNode.style.color=color;
+    if(utterancesLoad==1){utterancesTheme(utheme);}
+}
+function modeSwitch(){
+    let currentMode=document.documentElement.getAttribute('data-color-mode');
+    let newMode = currentMode === "light" ? "dark" : currentMode === "dark" ? "auto" : "light";
+    localStorage.setItem("meek_theme", newMode);
+    if(themeSettings[newMode]){
+        changeTheme(...themeSettings[newMode]);
+    }
+}
+function utterancesTheme(theme){
+    const message={type:'set-theme',theme: theme};
+    const iframe=document.getElementsByClassName('utterances-frame')[0];
+    iframe.contentWindow.postMessage(message,'https://utteranc.es');
+}
+if(themeSettings[theme]){changeTheme(...themeSettings[theme]);}
+console.log("\n %c Gmeek last https://github.com/Meekdai/Gmeek \n","padding:5px 0;background:#02d81d;color:#fff");
+</script>
+
+<script>
+document.getElementById("pathHome").setAttribute("d",IconList["home"]);
+document.getElementById("pathIssue").setAttribute("d",IconList["github"]);
+
+
+
+function openComments(){
+    cm=document.getElementById("comments");
+    cmButton=document.getElementById("cmButton");
+    cmButton.disabled=true;
+    cmButton.innerHTML="loading";
+    span=document.createElement("span");
+    span.setAttribute("class","AnimatedEllipsis");
+    cmButton.appendChild(span);
+
+    script=document.createElement("script");
+    script.setAttribute("src","https://utteranc.es/client.js");
+    script.setAttribute("repo","flyvulpine/flyvulpine.github.io");
+    script.setAttribute("issue-term","title");
+    
+    if(localStorage.getItem("meek_theme")=="dark"){script.setAttribute("theme","dark-blue");}
+    else if(localStorage.getItem("meek_theme")=="light") {script.setAttribute("theme","github-light");}
+    else{script.setAttribute("theme","preferred-color-scheme");}
+    
+    script.setAttribute("crossorigin","anonymous");
+    script.setAttribute("async","");
+    cm.appendChild(script);
+
+    int=self.setInterval("iFrameLoading()",200);
+}
+
+function iFrameLoading(){
+    var utterances=document.getElementsByClassName('utterances');
+    if(utterances.length==1){
+        if(utterances[0].style.height!=""){
+            utterancesLoad=1;
+            int=window.clearInterval(int);
+            document.getElementById("cmButton").style.display="none";
+            console.log("utterances Load OK");
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const createClipboardHTML = (codeContent, additionalClasses = '') => `
+        <pre class="notranslate"><code class="notranslate">${codeContent}</code></pre>
+        <div class="clipboard-container position-absolute right-0 top-0 ${additionalClasses}">
+            <clipboard-copy class="ClipboardButton btn m-2 p-0" role="button" style="display: inherit;">
+                <svg height="16" width="16" class="octicon octicon-copy m-2"><path d="${IconList["copy"]}"></path></svg>
+                <svg height="16" width="16" class="octicon octicon-check color-fg-success m-2 d-none"><path d="${IconList["check"]}"></path></svg>
+            </clipboard-copy>
+            <div class="copy-feedback">Copied!</div>
+        </div>
+    `;
+
+    const handleCodeElements = (selector = '') => {
+        document.querySelectorAll(selector).forEach(codeElement => {
+            const codeContent = codeElement.innerHTML;
+            const newStructure = document.createElement('div');
+            newStructure.className = 'snippet-clipboard-content position-relative overflow-auto';
+            newStructure.innerHTML = createClipboardHTML(codeContent);
+
+            const parentElement = codeElement.parentElement;
+            if (selector.includes('highlight')) {
+                parentElement.insertBefore(newStructure, codeElement.nextSibling);
+                parentElement.removeChild(codeElement);
+            } else {
+                parentElement.parentElement.replaceChild(newStructure, parentElement);
+            }
+        });
+    };
+
+    handleCodeElements('pre.notranslate > code.notranslate');
+    handleCodeElements('div.highlight > pre.notranslate');
+
+    let currentFeedback = null;
+    document.querySelectorAll('clipboard-copy').forEach(copyButton => {
+        copyButton.addEventListener('click', () => {
+            const codeContent = copyButton.closest('.snippet-clipboard-content').innerText;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = codeContent;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+
+            const copyIcon = copyButton.querySelector('.octicon-copy');
+            const checkIcon = copyButton.querySelector('.octicon-check');
+            const copyFeedback = copyButton.nextElementSibling;
+
+            if (currentFeedback && currentFeedback !== copyFeedback) {currentFeedback.style.display = 'none';}
+            currentFeedback = copyFeedback;
+
+            copyIcon.classList.add('d-none');
+            checkIcon.classList.remove('d-none');
+            copyFeedback.style.display = 'block';
+            copyButton.style.borderColor = 'var(--color-success-fg)';
+
+            setTimeout(() => {
+                copyIcon.classList.remove('d-none');
+                checkIcon.classList.add('d-none');
+                copyFeedback.style.display = 'none';
+                copyButton.style.borderColor = '';
+            }, 2000);
+        });
+    });
+});
+
+</script>
+<script src='https://blog.meekdai.com/Gmeek/plugins/GmeekTOC.js'></script><script>MathJax = {tex: {inlineMath: [["$", "$"]]}};</script><script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+</html>

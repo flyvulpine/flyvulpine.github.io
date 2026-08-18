@@ -1,5 +1,131 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Tue, 28 Apr 2026 17:27:20 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>诗歌《迎日》</title><link>https://flyvulpine.github.io/post/shi-ge-%E3%80%8A-ying-ri-%E3%80%8B.html</link><description>## 迎日
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Tue, 18 Aug 2026 01:17:17 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>古堡朝圣问题的求解</title><link>https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</link><description># 问题描述
+从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
+### 几何抽象
+**已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.**
+
+&lt;img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/a1749bc1-ed2f-4886-b193-2b72efdbc877' /&gt;
+
+### 常数设定
+设圆心(a,b)，半径r，P坐标(x&lt;sub&gt;1&lt;/sub&gt;,y&lt;sub&gt;1&lt;/sub&gt;)，Q坐标(x&lt;sub&gt;2&lt;/sub&gt;,y&lt;sub&gt;2&lt;/sub&gt;)，动点A坐标(x,y).
+**这里以 a = 2, b = -1, r = 3， x&lt;sub&gt;1&lt;/sub&gt; = 5, y&lt;sub&gt;1&lt;/sub&gt; = 1, x&lt;sub&gt;2&lt;/sub&gt; = -2, y&lt;sub&gt;2&lt;/sub&gt; = 4为例**.
+
+## 第一种暴力解法
+我们有一种很直接的想法，就是穷举圆上所有的点A，然后计算所有的PA+AQ，通过比较得到最小值.
+这里的计算显然是复杂的，我们可以交给计算机.
+
+### 暴力解法code示例
+```cpp
+#include &lt;iostream&gt;
+#include &lt;cmath&gt;
+#include &lt;iomanip&gt;
+using namespace std;
+
+int main() {
+    // 常数
+    double a = 2, b = -1, r = 3;
+    double x1 = 5, y1 = 1, x2 = -2, y2 = 4;
+
+    double best_theta = 0;
+    double min_dist = 1e9;
+
+    // 暴力扫描：角度步长 0.0001 弧度
+    for (double theta = 0; theta &lt; 2 * M_PI; theta += 0.0001) {
+        double x = a + r * cos(theta);
+        double y = b + r * sin(theta);
+
+        double d1 = sqrt(pow(x - x1, 2) + pow(y - y1, 2));
+        double d2 = sqrt(pow(x - x2, 2) + pow(y - y2, 2));
+        double total = d1 + d2;
+
+        if (total &lt; min_dist) {
+            min_dist = total;
+            best_theta = theta;
+        }
+    }
+
+    double x_ans = a + r * cos(best_theta);
+    double y_ans = b + r * sin(best_theta);
+
+    cout &lt;&lt; fixed &lt;&lt; setprecision(6);
+    cout &lt;&lt; '最短路径点: (' &lt;&lt; x_ans &lt;&lt; ', ' &lt;&lt; y_ans &lt;&lt; ')' &lt;&lt; endl;
+    cout &lt;&lt; '最短总距离: ' &lt;&lt; min_dist &lt;&lt; endl;
+
+    return 0;
+}
+```
+
+以上使用了圆的参数方程，遍历θ得到结果.
+利用c++我们很快就可以跑出结果（精度可以修改θ的步长).
+
+```
+最短路径点：（3.172664，1.761315）
+最短路径：7.615911
+```
+
+## 第二种解析方法
+我们想要用解析法尝试找到满足题目条件的A，应该满足怎样的约束条件？
+或者能否使用尺规作图找出这个A点？
+
+### 由直线到圆
+这个问题如果在直线上，那么就是将军饮马问题，就是做对称，定点P的对称点P’，动点A‘，与另一个定点Q三点共线时，距离取得最小值.
+
+&lt;img width='600' height='500' alt='Image' src='https://github.com/user-attachments/assets/feb102ba-2af0-4b76-9503-389c96294dda' /&gt;
+
+### 解析法求A须满足的条件
+那么在一个圆中，我们怎样把这个问题转化再到直线上呢？
+很容易想到作**圆的切线**，在圆的切线上找一点B不同于A，延长PA交圆于C，如下图.
+
+&lt;img width='571' height='458' alt='Image' src='https://github.com/user-attachments/assets/c2046eee-9266-4a5e-9475-92ed08daa29d' /&gt;
+
+&gt; [!NOTE]
+&gt; C点怎么取？这里PA与圆相离时不考虑，与圆相切时取切点，与圆相交于两个交点时，取第一个交点（显然，第二个交点的距离比第一个交点来得远).
+
+在这里我们将P关于切线作对称，利用将军饮马的思路求出，再切线上哪个点D，可以使得PD+DQ的距离最小.
+
+&lt;img width='566' height='563' alt='Image' src='https://github.com/user-attachments/assets/cffc8a2f-1382-4eb3-a30f-a841b0432038' /&gt;
+
+由于我们有PC+CQ＞PB+BQ＞PD+DQ
+那么这里我们只需要找到一点A，让D与A重合即有:
+PC+CQ＞PB+BQ＞PA+AQ
+
+&lt;img width='560' height='600' alt='Image' src='https://github.com/user-attachments/assets/4fedd92e-a3eb-4519-97f2-b0b919f25cb1' /&gt;
+
+&gt; [!TIP]
+&gt; 这个点A满足反射角等于入射角（在后面可以推出椭圆的光学性质）
+
+### 点A代数约束条件的求解
+上述的点A满足反射角等于入射角.
+这里可以作直线OA，取A上方直线的一个点E，以上条件可以描述为∠PAE=∠EAQ
+我们在这里利用向量的方法表示两个夹角.
+为了方便坐标表示，不妨使得AE=OA，这样使得 $\overrightarrow{OA}=\overrightarrow{AE}$.
+
+&lt;img width='581' height='550' alt='Image' src='https://github.com/user-attachments/assets/b16a3738-8812-471d-bab4-166473648428' /&gt;
+
+cos∠PAE= $\frac{\overrightarrow{AP}·\overrightarrow{AE}}{|AP||AE|}$
+cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$
+由于∠PAE=∠EAQ，又有 $\overrightarrow{OA}=\overrightarrow{AE}$，所以有下式
+ $\frac{\overrightarrow{AP}·\overrightarrow{OA}}{|AP|}=\frac{\overrightarrow{AQ}·\overrightarrow{OA}}{|AQ|}$
+
+这里可以用向量数量积的坐标运算展开，得到第一个约束
+ $\frac{(x_1-x)(x-a)+(y_1-y)(y-b)}{\sqrt{(x-x_1)^2+(y-y_1)^2}}=\frac{(x_2-x)(x-a)+(y_2-y)(y-b)}{\sqrt{(x-x_2)^2+(y-y_2)^2}}$
+又有A在圆上，所以有
+ $(x-a)^2+(y-b)^2=r^2$
+
+由上述得到的两个约束，x，y满足一个四次有理方程，可以通过差分或牛顿迭代法等求得数值解.
+
+### 求A最终的数值解
+解上述的四次方程，可以得到四个解（含复数解）t&lt;sub&gt;1&lt;/sub&gt;,t&lt;sub&gt;2&lt;/sub&gt;,t&lt;sub&gt;3&lt;/sub&gt;,t&lt;sub&gt;4&lt;/sub&gt;
+这里由于平方操作会产生增根，所以需要带回去检验消除增根.
+检验之后剩下的根也不一定是唯一的，因为直线是有可能与圆产生两个交点的，因此需要进一步检验.
+
+由上述可知，想要算出A的数值解计算量庞大（这也映证了使用尺规作图寻找点A的难度之大，当然这已经有数学家给出了完整的证明）
+
+### 解析法+牛顿迭代法求A数值解code示例
+
+- 由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化
+&gt; [!NOTE]
+&gt; 如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u&lt;sup&gt;2&lt;/sup&gt;+v&lt;sup&gt;2&lt;/sup&gt;=r&lt;sup&gt;2&lt;/sup&gt;,设圆上A(x,y)，定点变为P‘=(u&lt;sub&gt;1&lt;/sub&gt;,v&lt;sub&gt;1&lt;/sub&gt;)=(x&lt;sub&gt;1&lt;/sub&gt;-a,y&lt;sub&gt;1&lt;/sub&gt;-b)，Q'=(u&lt;sub&gt;2&lt;/sub&gt;,v&lt;sub&gt;2&lt;/sub&gt;)=(x&lt;sub&gt;2&lt;/sub&gt;-a,y&lt;sub&gt;2&lt;/sub&gt;-b)。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</guid><pubDate>Mon, 17 Aug 2026 08:47:54 +0000</pubDate></item><item><title>诗歌《迎日》</title><link>https://flyvulpine.github.io/post/shi-ge-%E3%80%8A-ying-ri-%E3%80%8B.html</link><description>## 迎日
 踏碎晨霜步未停，
 袖间红日掌中星。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/shi-ge-%E3%80%8A-ying-ri-%E3%80%8B.html</guid><pubDate>Wed, 04 Mar 2026 06:24:58 +0000</pubDate></item><item><title>青铜之殇，镌刻时代新章</title><link>https://flyvulpine.github.io/post/qing-tong-zhi-shang-%EF%BC%8C-juan-ke-shi-dai-xin-zhang.html</link><description>&gt;[!NOTE]
 &gt;本文为改稿，由历史书籍有感而发，如有知识性错误欢迎指出。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/qing-tong-zhi-shang-%EF%BC%8C-juan-ke-shi-dai-xin-zhang.html</guid><pubDate>Wed, 04 Mar 2026 06:18:31 +0000</pubDate></item><item><title>傍晚的偶遇</title><link>https://flyvulpine.github.io/post/bang-wan-de-ou-yu.html</link><description>黄昏时分，我走在回家的路上。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/bang-wan-de-ou-yu.html</guid><pubDate>Wed, 04 Mar 2026 06:12:57 +0000</pubDate></item><item><title>markdown语法调试</title><link>https://flyvulpine.github.io/post/markdown-yu-fa-diao-shi.html</link><description>&gt; [!NOTE]
