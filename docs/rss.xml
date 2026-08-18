@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Tue, 18 Aug 2026 01:26:05 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>古堡朝圣问题的求解</title><link>https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</link><description>&gt; [!TIP]
-&gt; 本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看.
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Tue, 18 Aug 2026 01:32:13 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>古堡朝圣问题的求解</title><link>https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</link><description>&gt; [!TIP]
+&gt; 本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看或者缩略查看，图片的查看需要保证您的网速
 
 # 问题描述
 从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
@@ -124,7 +124,7 @@ cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$
 
 由上述可知，想要算出A的数值解计算量庞大（这也映证了使用尺规作图寻找点A的难度之大，当然这已经有数学家给出了完整的证明）
 
-### 解析法+牛顿迭代法求A数值解code示例
+### 将表达式转化为非齐次线性一元方程
 
 - 由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化
 &gt; [!NOTE]
