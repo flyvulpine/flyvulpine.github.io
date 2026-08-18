@@ -10,7 +10,10 @@
         let theme = localStorage.getItem("meek_theme") || "light";
         document.documentElement.setAttribute("data-color-mode", theme);
     </script>
-<meta name="description" content="# 问题描述
+<meta name="description" content="> [!TIP]
+> 本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看.
+
+# 问题描述
 从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
 ### 几何抽象
 **已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.**
@@ -138,7 +141,10 @@ cos∠EAQ= $\frac{\overrightarrow{AQ}·\overrightarrow{AE}}{|AQ||AE|}$
 > [!NOTE]
 > 如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。">
 <meta property="og:title" content="古堡朝圣问题的求解">
-<meta property="og:description" content="# 问题描述
+<meta property="og:description" content="> [!TIP]
+> 本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看.
+
+# 问题描述
 从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？
 ### 几何抽象
 **已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.**
@@ -335,7 +341,9 @@ body{box-sizing: border-box;min-width: 200px;max-width: 900px;margin: 20px auto;
 </div>
 </div>
     <div id="content">
-<div class="markdown-body" id="postBody"><h1>问题描述</h1>
+<div class="markdown-body" id="postBody"><div class="markdown-alert markdown-alert-tip"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-light-bulb mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M8 1.5c-2.363 0-4 1.69-4 3.75 0 .984.424 1.625.984 2.304l.214.253c.223.264.47.556.673.848.284.411.537.896.621 1.49a.75.75 0 0 1-1.484.211c-.04-.282-.163-.547-.37-.847a8.456 8.456 0 0 0-.542-.68c-.084-.1-.173-.205-.268-.32C3.201 7.75 2.5 6.766 2.5 5.25 2.5 2.31 4.863 0 8 0s5.5 2.31 5.5 5.25c0 1.516-.701 2.5-1.328 3.259-.095.115-.184.22-.268.319-.207.245-.383.453-.541.681-.208.3-.33.565-.37.847a.751.751 0 0 1-1.485-.212c.084-.593.337-1.078.621-1.489.203-.292.45-.584.673-.848.075-.088.147-.173.213-.253.561-.679.985-1.32.985-2.304 0-2.06-1.637-3.75-4-3.75ZM5.75 12h4.5a.75.75 0 0 1 0 1.5h-4.5a.75.75 0 0 1 0-1.5ZM6 15.25a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path></svg>Tip</p><p>本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看.</p>
+</div>
+<h1>问题描述</h1>
 <p>从前有一名小贩信徒，每日从家（点P）出发，需先至圆形古堡上某点A朝拜某位于圆心O的神像，再前往集市（点Q），问如何选择P点使路径AP+PB最短？</p>
 <h3>几何抽象</h3>
 <p><strong>已知定圆O及园外两定点P，Q，在圆周上求一点A，使得PA+AQ取得最小A值.</strong></p>
@@ -433,7 +441,7 @@ $(x-a)^2+(y-b)^2=r^2$</p>
 <ul>
 <li>由于使用牛顿迭代法需要为一元方程，我们采用圆的参数方程进行一元化</li>
 </ul>
-<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。此时上述的第一个约束条件化为: $\frac{P'·A - r^2}{|P'-A|}=\frac{Q'·A - r^2}{|Q'-A|}$，其中点积 $P'·A=u_1u+v_1v$, $|P'-A|=\sqrt{(u-u_1)^2+(v-v_1)^2}$，接下来参数化，令A=(u,v)=r(cosθ,sinθ)，则: $P'·A = r(u_1cosθ+v_1sinθ)，|P'-A|^2 = |P'|^2+r^2-2P'·A$，记 $\alpha = u_1,\ \beta=v_1,\quad \gamma=u_2,\ \delta=v_2,\quad \rho=r.$此时第一个约束可以化为： $\frac{\rho(\alpha\cos\theta+\beta\sin\theta)-\rho^2}{\sqrt{\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)}}=\frac{\rho(\gamma\cos\theta+\delta\sin\theta)-\rho^2}{\sqrt{\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)}}.$接下来可以转化为四次方程，先两边平方（这里会产生增根，可能是外角平分线): $\left(\alpha\cos\theta+\beta\sin\theta-\rho\right)^2\left(\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)\right)=\left(\gamma\cos\theta+\delta\sin\theta-\rho\right)^2\left(\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)\right).$，利用万能公式化简，令 $t=\tan\frac{\theta}{2}$，则 $\cos\theta=\frac{1-t^2}{1+t^2},\quad \sin\theta=\frac{2t}{1+t^2}.$，代入之后，每一项都是关于 t 的有理函数。乘以公共分母 $(1+t^2)^2$（非零）后，得到关于 t 的多项式方程。因为 $\cos\theta,\sin\theta$ 中分母为 $1+t^2$，而平方后分母最高为 $(1+t^2)^2$，分子最高次数为 2，故整理后最高次数为 4。即总能写成： $\boxed{A_4 t^4 + A_3 t^3 + A_2 t^2 + A_1 t + A_0 =0,}$</p>
+<div class="markdown-alert markdown-alert-note"><p class="markdown-alert-title"><svg data-component="Octicon" class="octicon octicon-info mr-2" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8Zm8-6.5a6.5 6.5 0 1 0 0 13 6.5 6.5 0 0 0 0-13ZM6.5 7.75A.75.75 0 0 1 7.25 7h1a.75.75 0 0 1 .75.75v2.75h.25a.75.75 0 0 1 0 1.5h-2a.75.75 0 0 1 0-1.5h.25v-2h-.25a.75.75 0 0 1-.75-.75ZM8 6a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z"></path></svg>Note</p><p>如何将上式转化为非齐次线性一元方程？先对坐标进行平移简化，令u=x-a，v=y-b，则圆变为u<sup>2</sup>+v<sup>2</sup>=r<sup>2</sup>,设圆上A(x,y)，定点变为P‘=(u<sub>1</sub>,v<sub>1</sub>)=(x<sub>1</sub>-a,y<sub>1</sub>-b)，Q'=(u<sub>2</sub>,v<sub>2</sub>)=(x<sub>2</sub>-a,y<sub>2</sub>-b)。此时上述的第一个约束条件化为: $\frac{P'·A - r^2}{|P'-A|}=\frac{Q'·A - r^2}{|Q'-A|}$，其中点积 $P'·A=u_1u+v_1v$, $|P'-A|=\sqrt{(u-u_1)^2+(v-v_1)^2}$，接下来参数化，令A=(u,v)=r(cosθ,sinθ)，则: $P'·A = r(u_1cosθ+v_1sinθ)，|P'-A|^2 = |P'|^2+r^2-2P'·A$，记 $\alpha = u_1,\ \beta=v_1,\quad \gamma=u_2,\ \delta=v_2,\quad \rho=r.$此时第一个约束可以化为： $\frac{\rho(\alpha\cos\theta+\beta\sin\theta)-\rho^2}{\sqrt{\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)}}=\frac{\rho(\gamma\cos\theta+\delta\sin\theta)-\rho^2}{\sqrt{\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)}}.$接下来可以转化为四次方程，先两边平方（这里会产生增根，可能是外角平分线): $\left(\alpha\cos\theta+\beta\sin\theta-\rho\right)^2\left(\gamma^2+\delta^2+\rho^2-2\rho(\gamma\cos\theta+\delta\sin\theta)\right)=\left(\gamma\cos\theta+\delta\sin\theta-\rho\right)^2\left(\alpha^2+\beta^2+\rho^2-2\rho(\alpha\cos\theta+\beta\sin\theta)\right).$，利用万能公式化简，令 $t=\tan\frac{\theta}{2}$，则 $\cos\theta=\frac{1-t^2}{1+t^2},\quad \sin\theta=\frac{2t}{1+t^2}.$，代入之后，每一项都是关于 t 的有理函数。乘以公共分母 $(1+t^2)^2$（非零）后，得到关于 t 的多项式方程。因为 $\cos\theta,\sin\theta$ 中分母为 $1+t^2$，而平方后分母最高为 $(1+t^2)^2$，分子最高次数为 2，故整理后最高次数为 4。即总能写成： $A_4 t^4 + A_3 t^3 + A_2 t^2 + A_1 t + A_0 =0.$</p>
 </div>
 <ul>
 <li>按照上述的方式可以将第一个约束表达为线性一元方程，进而使用牛顿迭代法，当然这里的系数展开略显冗杂，展开即可，这里不多赘述.</li>
