@@ -43,6 +43,9 @@
 ```
 <ins>这是下划线文字</ins>
 
+> [!NOTE]
+> 注意这里的上下标是用HTML标签实现的，后面可以用LaTex语法（仅在数学中使用）.
+
 ## 上标
 ```
 E=mc<sup>2</sup>
@@ -150,6 +153,16 @@ H<sub>2</sub>O
 | Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
 | Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
 | Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+
+## LaTex语法
+
+> [!NOTE]
+> markdown中使用LaTex语法需要用$......$（行内，注意前面要空一格）包裹，或者$$......$$（行外）包裹.
+
+<img width="538" height="707.5" alt="Image" src="https://github.com/user-attachments/assets/492f3453-6268-4410-a6f4-51028d144f29" />
+<img width="527.25" height="757.5" alt="Image" src="https://github.com/user-attachments/assets/26cd7c06-681d-4017-84aa-616f83466194" />
+<img width="531.5" height="757.5" alt="Image" src="https://github.com/user-attachments/assets/648ba440-7f54-4482-877a-139e933648a1" />
+<img width="538" height="671.25" alt="Image" src="https://github.com/user-attachments/assets/507d189d-7090-44c7-a6ed-79ca072f418d" />
 
 ## TOC目录
 所有文章页添加TOC目录，只需要在config.json文件内添加配置
