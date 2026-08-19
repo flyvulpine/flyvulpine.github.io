@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Wed, 19 Aug 2026 02:32:45 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>古堡朝圣问题的求解</title><link>https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</link><description>&gt; [!TIP]
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0"><channel><title>flyvulpine</title><link>https://flyvulpine.github.io</link><description>欢迎来到胡恒瑞的博客,看不见文章尝试刷新</description><copyright>flyvulpine</copyright><docs>http://www.rssboard.org/rss-specification</docs><generator>python-feedgen</generator><image><url>https://avatars.githubusercontent.com/u/261764710?v=4&amp;size=64</url><title>avatar</title><link>https://flyvulpine.github.io</link></image><lastBuildDate>Wed, 19 Aug 2026 06:57:26 +0000</lastBuildDate><managingEditor>flyvulpine</managingEditor><ttl>60</ttl><webMaster>flyvulpine</webMaster><item><title>古堡朝圣问题的求解</title><link>https://flyvulpine.github.io/post/gu-bao-zhao-sheng-wen-ti-de-qiu-jie.html</link><description>&gt; [!TIP]
 &gt; 本文章部分表达式较长，如果使用手机等查阅工具，请横屏查看或者缩略查看，图片的查看请保证网速，无法查看上滑刷新.
 
 # 问题描述
@@ -256,7 +256,19 @@ H&lt;sub&gt;2&lt;/sub&gt;O
 2026.2.28 《青铜之殇，镌刻时代新章》改稿
 
 2026.3.4 发布《傍晚的偶遇》《青铜之殇，镌刻时代新章》
-发布诗歌《迎日》。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</guid><pubDate>Wed, 18 Feb 2026 13:43:14 +0000</pubDate></item><item><title>新春祝福</title><link>https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</link><description># 新春祝福词
+发布诗歌《迎日》
+
+3-4月份未维护
+
+2026.5.3 修复了部分中文乱码问题
+
+2026.5.29 置顶了两篇issue
+
+6-7为正常维护
+
+2026.8.15-2026.8.18 研究古堡朝圣问题并发布了文章
+
+2026.8.19 经指正修正古堡朝圣问题部分问题并发布了两篇作文。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/Blog-geng-xin-ri-zhi.html</guid><pubDate>Wed, 18 Feb 2026 13:43:14 +0000</pubDate></item><item><title>新春祝福</title><link>https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</link><description># 新春祝福词
 ## ——致所有访友    
 岁序常易，华章日新。</description><guid isPermaLink="true">https://flyvulpine.github.io/post/xin-chun-zhu-fu.html</guid><pubDate>Wed, 18 Feb 2026 00:43:16 +0000</pubDate></item><item><title>关于</title><link>https://flyvulpine.github.io/about.html</link><description>## 简介
 这里是胡恒瑞的博客
